@@ -94,6 +94,7 @@ public class Principal {
         var nomeLivro = leitura.nextLine();
         String json = consumo.obterDados(BASE_URL + nomeLivro.replace(" ", "+"));
         ConsultaDTO resultadoConsulta = conversor.obterDados(json, ConsultaDTO.class);
+        System.out.println(resultadoConsulta);
         return resultadoConsulta.livros().get(0);
     }
 
@@ -141,7 +142,17 @@ public class Principal {
     }
 
     private void listarLivrosPorIdioma() {
-        System.out.println("Digite o idioma para a busca: ");
+        var opcoesIdiomas = """
+                Insira o idioma para realizar a busca: 
+                es - espanhol
+                en - inglês
+                fr - francês
+                pt - português
+                
+                
+                Digite o idioma para a busca:
+                """;
+        System.out.println(opcoesIdiomas);
         var idioma = leitura.nextLine();
 
         List<Livro> livros = livroRepository.findByIdiomaIgnoreCase(idioma);
