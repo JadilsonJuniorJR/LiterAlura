@@ -94,17 +94,27 @@ public class Principal {
         var nomeLivro = leitura.nextLine();
         String json = consumo.obterDados(BASE_URL + nomeLivro.replace(" ", "+"));
         ConsultaDTO resultadoConsulta = conversor.obterDados(json, ConsultaDTO.class);
-        System.out.println(resultadoConsulta);
-        return resultadoConsulta.livros().get(0);
+
+        if(resultadoConsulta.livros().isEmpty()){
+            return null;
+        }else
+            return resultadoConsulta.livros().get(0);
     }
 
     private void buscarLivroPorTitulo() {
         LivroDTO livroBuscado = getDadosLivro();
-        Livro livro = new Livro(livroBuscado);
 
-        livroRepository.save(livro);
-        System.out.println("Livro salvo com sucesso!");
-        System.out.println(livro);
+        try {
+            assert livroBuscado != null;
+            Livro livro = new Livro(livroBuscado);
+            livroRepository.save(livro);
+            System.out.println("Livro salvo com sucesso!");
+            System.out.println(livro);
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Este livro já foi registrado !");
+        } catch (NullPointerException e) {
+            System.out.println("O livro informado não foi encontrado\n");
+        }
 
     }
 
